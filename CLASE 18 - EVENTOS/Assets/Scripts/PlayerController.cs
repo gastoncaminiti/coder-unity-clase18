@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,6 +23,11 @@ public class PlayerController : MonoBehaviour
     private InventoryManager mgInventory;
 
 
+    //EVENTS
+    //public static event Action onDeath;
+
+    public static event Action<int> onLivesChange;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +37,8 @@ public class PlayerController : MonoBehaviour
         animPlayer.SetBool("isRun", false);
         //usernameText.text = ProfileManager.instance.GetPlayerName();
         SetPlayerRotation();
+        Debug.Log(onLivesChange.GetInvocationList().Length);
+        onLivesChange?.Invoke(lifePlayer);
     }
 
     void Update()
@@ -102,9 +110,13 @@ public class PlayerController : MonoBehaviour
         {
             lifePlayer--;
             Destroy(collision.gameObject);
-            if(lifePlayer < 0)
+            //onDeath?.Invoke();
+            onLivesChange?.Invoke(lifePlayer);
+            if (lifePlayer == 0)
             {
-                Debug.Log("GAME OVER");
+                //onDeath();
+                //onDeath?.Invoke();
+                PlayerEvents.OnDeath();
             }
         }
         
@@ -129,6 +141,15 @@ public class PlayerController : MonoBehaviour
             mgInventory.SeeInventoryThree();
             mgInventory.CountFood(food);
         }
+
+        if (other.gameObject.CompareTag("Life"))
+        {
+            lifePlayer++;
+            onLivesChange?.Invoke(lifePlayer);
+            Destroy(other.gameObject);
+        }
+
+
     }
 
     private void UseItem()

@@ -12,7 +12,9 @@ public class GameManager : MonoBehaviour
     //ENUMERACION PUBLICA
     public enum typesFood { Chesee , Cookie, Egg };
 
-    private int scoreInstanciado; 
+    private int scoreInstanciado;
+    private PlayerController playerScript;
+
 
     private void Awake()
     {
@@ -28,6 +30,22 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void Start()
+    {
+        //playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        //playerScript.onDeath += GameOver;
+        //PlayerController.onDeath += GameOver;
+        PlayerEvents.onDeath += GameOver;
+
+    }
+
+    private void GameOver()
+    {
+        Debug.Log("EL JUEGO TERMINO");
+        scoreInstanciado = 0;
+    }
+
 
     public void addScore()
     {

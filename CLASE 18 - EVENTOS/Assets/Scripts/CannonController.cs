@@ -52,7 +52,7 @@ public class CannonController : MonoBehaviour
         {
             if(hit.transform.tag == "Player")
             {
-                Debug.Log("COLISION PLAYER");
+                //Debug.Log("COLISION PLAYER");
                 canShoot   = false;
                 timerShoot = 0;
                 GameObject b = Instantiate(bulletPrefab, shootOrigen.transform.position, bulletPrefab.transform.rotation);
