@@ -14,12 +14,19 @@ public class CannonController : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
 
     private bool  canShoot = true;
-    private bool  isActive = true;
+    [SerializeField]  private bool  isActive = true;
 
+    /*
+    [SerializeField] private GameObject p1;
+    [SerializeField] private GameObject p2;
+    */
+
+    public GameObject[] waypoints;
 
     void Start()
     {
-        
+        StartCoroutine(RotateBehavior());
+        StartCoroutine(WaypointsBehavior());
     }
 
     // Update is called once per frame
@@ -43,6 +50,49 @@ public class CannonController : MonoBehaviour
         }
     }
 
+    IEnumerator RotateBehavior()
+    {
+        /* yield return new WaitForSeconds(2f);
+        Debug.Log("ROTAR CAÑON");
+        transform.Rotate(0, 45f, 0);
+        yield return new WaitForSeconds(2f);
+        transform.Rotate(0, 45f, 0);
+        */
+        /*
+        for (int i = 0; i < 4; i++)
+        {
+            yield return new WaitForSeconds(3f);
+            transform.Rotate(0, 90f, 0);
+        }
+        */
+        while (isActive)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                yield return new WaitForSeconds(3f);
+                transform.Rotate(0, 90f, 0);
+            }
+        }
+
+    }
+
+    IEnumerator WaypointsBehavior()
+    {
+        /*
+        transform.position = p1.transform.position;
+        yield return new WaitForSeconds(4f);
+        transform.position = p2.transform.position;
+        */
+        for (int i = 0; i < waypoints.Length; ++i)
+        {
+            while (transform.position !=  waypoints[i].transform.position)
+            {
+                yield return null;
+                transform.position = Vector3.MoveTowards(transform.position, waypoints[i].transform.position, 10f * Time.deltaTime);
+            }
+            yield return new WaitForSeconds(3f);
+        }
+    }
 
     private void RaycastCannon()
     {
